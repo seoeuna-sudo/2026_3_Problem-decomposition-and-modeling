@@ -101,7 +101,7 @@
     .cert-kicker{position:relative;color:#4f7cac;font-weight:800;letter-spacing:.08em}.cert-icon{position:relative;width:68px;height:68px;margin:18px auto 10px;border-radius:50%;display:grid;place-items:center;background:#2d7d6f;color:#fff;font-size:34px;font-weight:900;box-shadow:0 8px 18px rgba(45,125,111,.22)}
     .certificate-card h3{position:relative;margin:4px 0 8px;color:#274c77;font-size:34px}.cert-unit{position:relative;color:#587087;font-weight:700}.cert-student{position:relative;display:flex;justify-content:center;align-items:baseline;gap:12px;margin:24px auto 18px}.cert-student strong{font-size:27px;color:#203044}.cert-student span{font-size:17px;color:#64748b}
     .cert-message{position:relative;line-height:1.9;color:#34495e}.cert-date{position:relative;margin-top:18px;color:#4b6278;font-weight:700}.cert-seal{position:absolute;right:45px;bottom:35px;width:82px;height:82px;border:3px solid rgba(45,125,111,.6);border-radius:50%;display:grid;place-items:center;color:#2d7d6f;font-weight:900;transform:rotate(-8deg)}
-    .certificate-actions{display:flex;justify-content:center;margin-top:14px}.certificate-actions button{border:0;border-radius:12px;padding:13px 20px;background:linear-gradient(135deg,#2d7d6f,#4f7cac);color:#fff;font-weight:800}.padlet-note{text-align:center;margin:10px 0 0;color:#53677b;font-size:14px}
+    .certificate-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}.certificate-actions button,.certificate-actions a{border:0;border-radius:12px;padding:13px 20px;background:linear-gradient(135deg,#2d7d6f,#4f7cac);color:#fff;font-weight:800;text-decoration:none}.padlet-note{text-align:center;margin:10px 0 0;color:#53677b;font-size:14px}
     .pdf-source-host{position:fixed;left:0;top:0;width:794px;visibility:hidden;pointer-events:none;z-index:-1}
     .pdf-sheet{width:100%!important;max-width:none!important;margin:0!important;padding:30px!important;box-sizing:border-box!important;background:#fff}
     .pdf-sheet .screen-only,.pdf-sheet .topbar,.pdf-sheet .footer-actions,.pdf-sheet .check-btn,.pdf-sheet .hint-btn,.pdf-sheet .hint,.pdf-sheet .feedback{display:none!important}
@@ -283,15 +283,15 @@
           <div class="cert-message">위 학생은 「01. 문제 분해와 모델링」 자기주도 학습에서<br>필수 활동을 모두 작성하고 핵심 개념 확인을 완료하였습니다.</div>
           <div class="cert-date" id="certDate"></div><div class="cert-seal">학습<br>완료</div>
         </div>
-        <div class="certificate-actions"><button type="button" id="certificateDownloadBtn">확인증 이미지 다운로드</button></div>
-        <p class="padlet-note">다운로드한 PNG 그림 파일을 패들렛에 업로드하면 활동이 마무리됩니다.</p>
+        <div class="certificate-actions"><button type="button" id="certificateDownloadBtn">확인증 다시 다운로드</button><a id="googleFormLink" href="https://forms.gle/75gy4KxnWKPMqj596" target="_blank" rel="noopener">Google Form 다시 열기</a></div>
+        <p class="padlet-note">확인증 PNG가 자동으로 저장됩니다. 열린 Google Form에서 파일을 첨부하고 제출하세요. Google 계정 로그인이 필요할 수 있습니다.</p>
       </div>
       <p class="source-note">학습 내용 구성 기준: 제공된 정보 교과서 「01. 문제 분해와 모델링」(84~91쪽). 교과서의 핵심 개념과 예제를 자기주도 학습용으로 재구성함.</p>
     </section>
-    <p class="save-note screen-only">입력 내용은 이 브라우저에 자동 저장됩니다. 공용 컴퓨터에서는 학습 완료 확인 후 ‘작성 내용 지우기’를 눌러 주세요.</p>
+    <p class="save-note screen-only">입력 내용은 이 브라우저에 자동 저장됩니다. Google Form 제출 후 공용 컴퓨터에서는 ‘작성 내용 지우기’를 눌러 주세요.</p>
   </main>
 
-  <div class="footer-actions screen-only"><div class="panel"><button class="ghost" id="resetBtn" type="button">작성 내용 지우기</button><button class="primary" id="completionBtn" type="button">학습 완료 확인</button></div></div>
+  <div class="footer-actions screen-only"><div class="panel"><button class="ghost" id="resetBtn" type="button">작성 내용 지우기</button><button class="primary" id="formSubmitBtn" type="button">Google Form으로 확인증 제출하기</button></div></div>
   <div class="toast" id="toast" role="status"></div>
 
   <script id="html2pdf-library">
@@ -327,7 +327,7 @@
     fields.forEach(el=>{el.addEventListener('input',()=>{clearCompletionStatus();grow(el);save()});el.addEventListener('change',()=>{clearCompletionStatus();save()})});
     function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200)}
     document.getElementById('resetBtn').addEventListener('click',()=>{if(!confirm('작성한 내용을 모두 지울까요? 이 작업은 되돌릴 수 없습니다.'))return;localStorage.removeItem(KEY);fields.forEach(el=>{if(el.type==='radio'||el.type==='checkbox')el.checked=false;else el.value=''});document.querySelectorAll('.feedback,.hint').forEach(el=>el.classList.remove('show'));clearCompletionStatus();growAll();updateProgress();toast('작성 내용을 지웠습니다.')});
-    document.getElementById('completionBtn').addEventListener('click',()=>{
+    document.getElementById('formSubmitBtn').addEventListener('click',()=>{
       save();document.querySelectorAll('.needs-attention').forEach(el=>el.classList.remove('needs-attention'));
       const unanswered=required.filter(el=>!valueOf(el).trim());
       const answerFields=[...document.querySelectorAll('[data-answer]')];
@@ -353,10 +353,11 @@
       document.getElementById('certName').textContent=`${document.getElementById('studentName').value.trim()} 학생`;
       document.getElementById('certNo').textContent=`학번 ${document.getElementById('studentNo').value.trim()}`;
       document.getElementById('certDate').textContent=dateText;document.getElementById('certificateArea').hidden=false;
-      document.getElementById('certificateArea').scrollIntoView({behavior:'smooth',block:'center'});toast('학습 완료 확인증이 발급되었습니다!');
+      downloadCertificateImage(false);document.getElementById('googleFormLink').click();
+      document.getElementById('certificateArea').scrollIntoView({behavior:'smooth',block:'center'});toast('확인증을 저장했습니다. 열린 Google Form에 첨부해 주세요.');
     });
     function roundedRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
-    document.getElementById('certificateDownloadBtn').addEventListener('click',()=>{
+    function downloadCertificateImage(showMessage=true){
       const no=document.getElementById('studentNo').value.trim(),name=document.getElementById('studentName').value.trim();
       const today=new Date(),dateText=`${today.getFullYear()}년 ${today.getMonth()+1}월 ${today.getDate()}일`;
       const canvas=document.createElement('canvas');canvas.width=1400;canvas.height=900;const ctx=canvas.getContext('2d');
@@ -371,8 +372,9 @@
       ctx.fillStyle='#34495e';ctx.font='500 29px "Noto Sans KR","Malgun Gothic",sans-serif';ctx.fillText('위 학생은 「01. 문제 분해와 모델링」 자기주도 학습에서',700,615);ctx.fillText('필수 활동을 모두 작성하고 핵심 개념 확인을 완료하였습니다.',700,665);
       ctx.fillStyle='#4b6278';ctx.font='700 27px "Noto Sans KR","Malgun Gothic",sans-serif';ctx.fillText(dateText,700,750);
       ctx.save();ctx.translate(1190,730);ctx.rotate(-8*Math.PI/180);ctx.beginPath();ctx.arc(0,0,68,0,Math.PI*2);ctx.lineWidth=5;ctx.strokeStyle='rgba(45,125,111,.65)';ctx.stroke();ctx.fillStyle='#2d7d6f';ctx.font='900 25px "Noto Sans KR","Malgun Gothic",sans-serif';ctx.fillText('학습 완료',0,9);ctx.restore();
-      const safe=s=>s.replace(/[\\/:*?"<>|]/g,'_').trim();const link=document.createElement('a');link.download=`${safe(no)}${safe(name)}_학습완료확인증.png`;link.href=canvas.toDataURL('image/png');link.click();toast('확인증 이미지를 저장했습니다. 패들렛에 업로드해 주세요.');
-    });
+      const safe=s=>s.replace(/[\\/:*?"<>|]/g,'_').trim();const link=document.createElement('a');link.download=`${safe(no)}${safe(name)}_학습완료확인증.png`;link.href=canvas.toDataURL('image/png');link.click();if(showMessage)toast('확인증 이미지를 다시 저장했습니다.');
+    }
+    document.getElementById('certificateDownloadBtn').addEventListener('click',()=>downloadCertificateImage());
     window.addEventListener('beforeprint',growAll);load();
   })();
   </script>
